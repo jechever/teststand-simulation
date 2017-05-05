@@ -420,13 +420,15 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 void DetectorConstruction::PrintParameters()
 {
-  G4cout << "\n Target : Length = " << G4BestUnit(fTargetLength,"Length")
+  /*G4cout << "\n Target : Length = " << G4BestUnit(fTargetLength,"Length")
          << " Radius = " << G4BestUnit(fTargetRadius,"Length")  
          << " Material = " << fTargetMater->GetName();
   G4cout << "\n Detector : Length = " << G4BestUnit(fDetectorLength,"Length")
          << " Tickness = " << G4BestUnit(fDetectorThickness,"Length")  
          << " Material = " << fDetectorMater->GetName() << G4endl;          
   G4cout << "\n" << fTargetMater << "\n" << fDetectorMater << G4endl;
+*/
+	G4cout << "Passed" <<G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
