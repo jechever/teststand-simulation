@@ -152,7 +152,7 @@ void DetectorConstruction::DefineMaterials()
     EJ309->AddElement(C, natoms=4);
     EJ309->AddElement(H, natoms=5);
     //
-    G4Material* shape1_mat = EJ309;
+    shape1_mat = EJ309;
     
     
 
