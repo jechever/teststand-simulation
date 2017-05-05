@@ -3,28 +3,27 @@
     Geant4 - an Object-Oriented Toolkit for Simulation in HEP
     =========================================================
 
-                              rdecay02
-                              --------
 
-  Rdecay02 is created to show how to use the G4RadioactiveDecay process to 
-  simulate the decays of radioactive isotopes as well as the induced
-  radioactivity resulted from nuclear interactions. 
-
-  In this example a simple geometry consists of a cylindric target placed 
-  in the centre of a tube detector. Various primary event generation and 
-  tallying options are available.
+  Based on Geant4's rdecay02 example, we build a geometry corresponding to 
+  our test-stand at IIT.
 
   1. GEOMETRY
 
-    The world is filled with "Air" and there are two components in it:	     
+    The world is filled with "Air". The main components in it are:	     
  
-    - Target:  A cylinder placed at the origin along the z-axis. The default 
-      size of the cylinder is 0.5 cm radius and 1 cm length, and its default 
-      material is "CsI".
+    - Target:  A hollow cylinder placed at the origin along the z-axis. The
+      material used is Aluminum 
 		  
     - Detector: A tube centered at the origin along the z-axis, with inner 
-      radius matching the radius of the target. The default thickness of the 
-      tube is 2 cm and it is 5 cm long. The default material is "Germanium".
+      radius matching the radius of the target. The material used is EJ309, 
+      which is simply set as a hydrocarbon at standard temperature and 
+      pressure, and density ~0.9 g/cm^3
+      
+    - Several other Aluminum components are included, they are a solid 
+      cylinder (bottom of canister), a hollow aluminum cylinder (top of the 
+      canister), and a plexiglass cylinder at top inside of the top cylinder 
+      to simulate the waveguide. All elements are centered at the origin 
+      along the z-axis
 
     The user can change the target/detector size and material, using the 
     commands in the directory  /rdecay02/det
@@ -48,10 +47,10 @@
   3. AN EVENT: THE PRIMARY GENERATOR
   
     The primary kinematic is a single particle or ion shooted at the 
-    centre of the target. The type of the particle and its energy are set in 
+    edge of the target. The type of the particle and its energy are set in 
     PrimaryGeneratorAction, and can be changed via the G4 build-in commands of
     ParticleGun class (see the macros provided with this example).
-    Default is Ne24, at rest.
+    We use Cs137 in this particular instance, emitting gammas in every direction. 
 
   4. DETECTOR RESPONSE
 
@@ -97,7 +96,7 @@
 	
    It is assumed the detector and target pulses both have an integration time 
    of 1 microsecond, and the gate is 2 microsecond for the coincidence spectrum.
-   The target and detctor have a threshold of 10 keV in the anti-/coincidence 
+   The target and detector have a threshold of 10 keV in the anti-/coincidence 
    modes.
    
    HistoManager includes also 4 ntuples whose contents are described in the above paragraphe
