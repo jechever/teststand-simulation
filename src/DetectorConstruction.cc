@@ -97,25 +97,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorConstruction::DefineMaterials()
-{   /*//STARTING HERE NOT SURE HOW MUCH IS NECESSARY
-    G4String name, symbol;             // a=mass of a mole;
-    G4double density;
-    //G4double a, z, density;            // z=mean number of protons;
-    //G4int iz, n;                       // iz=nb of protons  in an isotope;
-    // n=nb of nucleons in an isotope;
-    G4int ncomponents, natoms;
-    //G4double abundance, fractionmass;  //for ions
-    G4double temperature; //pressure;
-    
-    G4UnitDefinition::BuildUnitsTable();
-    ///
-    
-    // Get nist material manager
-    G4NistManager* nist = G4NistManager::Instance();
-    
-  //ENDS HERE
-  */
-    
+{   
   // build materials
   //
   fDetectorMater = 
@@ -152,7 +134,7 @@ void DetectorConstruction::DefineMaterials()
     EJ309->AddElement(C, natoms=4);
     EJ309->AddElement(H, natoms=5);
     //
-    G4Material* shape1_mat = EJ309;
+    shape1_mat = EJ309;
     
     
 
@@ -240,24 +222,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
   // Detector
   //
     
-    /*
-    G4double density = 0.959*g/cm3;
-    G4double temperature = 295.*kelvin;
-    G4Material* Hi = man->FindOrBuildMaterial("G4_H");
-    G4Material* Ca = man->FindOrBuildMaterial("G4_C");
-    
-    G4Material* EJ309 = new G4Material(name="EJ309"  , density, ncomponents=2, kStateLiquid, temperature);
-    //G4Material* PbWO4= new G4Material(name="PbWO4", density, ncomponents=3); //as in example
-    EJ309->AddMaterial(Hi, G4int natoms1 = 5);
-    EJ309->AddMaterial(Ca, G4int natoms2 = 4);
-    G4Material* shape1_mat = man->FindOrBuildMaterial("EJ309"); //A PLACE HOLDER, NEED TO USE EJ309
-    */
-    
-    
-    //G4Element* C  = new G4Element("Nitrogen", "C", 7, 14.01*g/mole);
-    //G4Element* H  = new G4Element("Oxygen",   "H", 8, 16.00*g/mole);
-
-    
     G4ThreeVector pos1 = G4ThreeVector(0, 0, 0);
     
     // A solid cylinder containing EJ309
@@ -329,10 +293,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                       0);                       //copy number
                       //checkOverlaps);          //overlaps checking
     
-    // Set Shape4 as scoring volume
-    //
-    //fScoringVolume = logicShape4; //NOT sure what this does
-    
     
     
     // SHAPE 5 -GLASS WINDOW
@@ -365,10 +325,6 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                       false,                   //no boolean operation
                       0);                       //copy number
                       //checkOverlaps);          //overlaps checking
-    
-    // Set Shape5 as scoring volume
-    //
-    //fScoringVolume = logicShape5; //NOT sure what this does
     
     
     
