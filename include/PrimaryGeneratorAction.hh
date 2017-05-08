@@ -34,33 +34,38 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
 #ifndef PrimaryGeneratorAction_h
 #define PrimaryGeneratorAction_h 1
-
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 #include "globals.hh"
 
+class G4ParticleGun;
 class G4Event;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+/// The primary generator action class with particle gun.
+///
+/// It defines (as default) a Cs-137 nucleus, at rest, from a point-like
+/// source at (0,0,-6) cm. All parameters (particle type, energy, direction,
+/// position) can be changed via the UI commands /gun/...
+///
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
-  public:
-    PrimaryGeneratorAction();    
-   ~PrimaryGeneratorAction();
-
-  public:
+public:
+    PrimaryGeneratorAction();
+    virtual ~PrimaryGeneratorAction();
+    
     virtual void GeneratePrimaries(G4Event*);
-    G4ParticleGun* GetParticleGun() {return fParticleGun;};
-
-  private:
-    G4ParticleGun*  fParticleGun;        //pointer a to G4 service class
-};
+    
+    const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
+    
+private:
+    
+        G4ParticleGun*  fParticleGun;
+    };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
