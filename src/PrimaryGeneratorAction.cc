@@ -1,4 +1,4 @@
-/*
+
  //
  // ********************************************************************
  // * License and Disclaimer                                           *
@@ -29,149 +29,77 @@
  /// \file B1PrimaryGeneratorAction.cc
  /// \brief Implementation of the B1PrimaryGeneratorAction class
  
- #include "B1PrimaryGeneratorAction.hh"
- 
- #include "G4LogicalVolumeStore.hh"
- #include "G4LogicalVolume.hh"
- #include "G4Box.hh"
- #include "G4RunManager.hh"
- #include "G4ParticleGun.hh"
- #include "G4ParticleTable.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4SystemOfUnits.hh"
- #include "Randomize.hh"
- #include "G4RandomDirection.hh"
- 
- //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
- B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()
- : G4VUserPrimaryGeneratorAction(),
- fParticleGun(0),
- fEnvelopeBox(0)
- {
- G4int n_particle = 1;
- fParticleGun  = new G4ParticleGun(n_particle);
- 
- // default particle kinematic
- G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
- G4String particleName;
- G4ParticleDefinition* particle
- = particleTable->FindParticle(particleName="gamma");
- fParticleGun->SetParticleDefinition(particle);
- fParticleGun->SetParticleEnergy(1.2*MeV);
- }
- 
- //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
- B1PrimaryGeneratorAction::~B1PrimaryGeneratorAction()
- {
- delete fParticleGun;
- }
- 
- //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
- void B1PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
- {
- //this function is called at the begining of ecah event
- //
- 
- // In order to avoid dependence of PrimaryGeneratorAction
- // on DetectorConstruction class we get Envelope volume
- // from G4LogicalVolumeStore.
- 
- G4double envSizeXY = 0;
- G4double envSizeZ = 0;
- 
- if (!fEnvelopeBox)
- {
- G4LogicalVolume* envLV
- = G4LogicalVolumeStore::GetInstance()->GetVolume("Envelope");
- if ( envLV ) fEnvelopeBox = dynamic_cast<G4Box*>(envLV->GetSolid());
- }
- 
- if ( fEnvelopeBox ) {
- envSizeXY = fEnvelopeBox->GetXHalfLength()*2.;
- envSizeZ = fEnvelopeBox->GetZHalfLength()*2.;
- }
- else  {
- G4ExceptionDescription msg;
- msg << "Envelope volume of box shape not found.\n";
- msg << "Perhaps you have changed geometry.\n";
- msg << "The gun will be place at the center.";
- G4Exception("B1PrimaryGeneratorAction::GeneratePrimaries()",
- "MyCode0002",JustWarning,msg);
- }
- 
- G4double size = 0.8;
- G4double x0 = 0.;
- G4double y0 = 6.55*cm;
- G4double z0 = -6.35*cm;
- 
- fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
- 
- fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
- 
- fParticleGun->GeneratePrimaryVertex(anEvent);
- }
- 
- //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- */
+ #include "PrimaryGeneratorAction.hh"
 
-#include "PrimaryGeneratorAction.hh"
+#include "G4RunManager.hh"
 #include "G4Event.hh"
+#include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4IonTable.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4Geantino.hh"
+#include "G4ChargedGeantino.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
-#include "G4RandomDirection.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 PrimaryGeneratorAction::PrimaryGeneratorAction()
-: G4VUserPrimaryGeneratorAction(),
-fParticleGun(0)
+ : G4VUserPrimaryGeneratorAction(),
+   fParticleGun(0)
 {
-    G4int n_particle = 1;
-    fParticleGun  = new G4ParticleGun(n_particle);
-    fParticleGun->SetParticleEnergy(0*eV);
-    //fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
-    //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,0.));
-    G4double x0 = 0.;
-    G4double y0 = 6.55*cm;
-    G4double z0 = -6.35*cm;
+      G4int n_particle = 1;
+      fParticleGun  = new G4ParticleGun(n_particle);
     
-    fParticleGun->SetParticleMomentumDirection(G4RandomDirection());
-    
-    fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
-    
-    //fParticleGun->GeneratePrimaryVertex(anEvent); //NOT SURE IF THIS IS NEEDED
+      // default particle kinematic
+      G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+      G4ParticleDefinition* particle
+                        = particleTable->FindParticle("chargedgeantino");
+      fParticleGun->SetParticleDefinition(particle);
+      //
+      // fixed position
+      //
+      G4double x0 = 0*cm, y0= 6.55*cm;
+      G4double z0 = -6.35*cm;
+      fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+      fParticleGun->SetParticleEnergy(1*eV);
+      //The default direction is the z-axis (i.e. towards the detector).
+      //However, if the primary particle is an unstable nucleus, Geant4
+      //will take care of the production of the final decay state, and the
+      //products will be emitted isotropically.
+      fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,0.));
+    }
 
-}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
+    
     delete fParticleGun;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) //A Caesium source
-{
-    if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {
-        G4int Z = 55, A = 137; //Cs-137, to change generators, change A and Z numbers
-        G4double ionCharge   = 0.*eplus;
-        G4double excitEnergy = 0.*keV;
-        
-        G4ParticleDefinition* ion
-        = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
-        fParticleGun->SetParticleDefinition(ion);
-        fParticleGun->SetParticleCharge(ionCharge);
-    }
-    //create vertex
-    //
-    fParticleGun->GeneratePrimaryVertex(anEvent);
+ //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+ {
+      G4ParticleDefinition* particle = fParticleGun->GetParticleDefinition();
+
+      //If the primary particle is defined to be a charged geantino (default),
+      //a Cs-137 nucleus is generated instead. The primary particle can be
+      //overridden at run time by the command /gun/particle
+      //
+      if (particle == G4ChargedGeantino::ChargedGeantino()) {
+            //Cs-137
+            G4int Z = 55, A = 137;
+            G4double ionCharge   = 0.*eplus;
+            G4double excitEnergy = 0.*keV;
+            G4ParticleDefinition* ion
+               = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
+            fParticleGun->SetParticleDefinition(ion);
+            fParticleGun->SetParticleEnergy(0.*eV); //at rest
+            fParticleGun->SetParticleCharge(ionCharge);
+          }
+      //create vertex
+      //
+      fParticleGun->GeneratePrimaryVertex(anEvent);
 }
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
