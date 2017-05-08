@@ -419,7 +419,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
 
 void DetectorConstruction::PrintParameters()
-{*/
+{/*
   G4cout << "\n Target : Length = " << G4BestUnit(fTargetLength,"Length")
          << " Radius = " << G4BestUnit(fTargetRadius,"Length")  
          << " Material = " << fTargetMater->GetName();
